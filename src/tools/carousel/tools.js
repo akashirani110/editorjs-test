@@ -1,5 +1,6 @@
 import {default as React} from 'react'
-import { ReactDOM } from 'react'
+import ReactDOM from 'react-dom'
+import ImageCarousel from './carousel';
 
 export default class Carousel{
     static get toolbox() {
@@ -19,7 +20,7 @@ export default class Carousel{
         this.api = api;
         this.readOnly = readOnly;
         this.data = {
-          events: data.events || [],
+          urls: data.urls || [],
         };
     
         this.CSS = {
@@ -44,7 +45,7 @@ export default class Carousel{
     
         ReactDOM.render(
           (
-            <Carousel
+            <ImageCarousel
               onDataChange={onDataChange}
               readOnly={this.readOnly}
               data={this.data} />

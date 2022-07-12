@@ -7,6 +7,10 @@ import SimpleImage from '@editorjs/simple-image';
 import Raw from '@editorjs/raw';
 import Link from '@editorjs/link';
 import Timeline from './tools/timeline/tools';
+import Carousel from './tools/carousel/tools';
+
+import { Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 const DEFAULT_INITIAL_DATA = () => {
     return{
@@ -23,30 +27,28 @@ const DEFAULT_INITIAL_DATA = () => {
     }
 }
 
+const useStyles = makeStyles(theme => ({
+    
+    saveBtn: {
+        backgroundColor: "#efc12e",
+    },    
+})
+);
+
 const EDITOR_HOLDER_ID = 'editorjs'
 
 const Editor = () => {
     const [editorData, setEditorData] = useState(DEFAULT_INITIAL_DATA);
-    const editorInstance = useRef();
+    const [savedData, setSavedData] = useState({});
+    const classes = useStyles();
 
-    useEffect(() => {
-        if(!editorInstance.current){
-            initEditor()
-        }
-    }, []);
-
-    const initEditor = () => {
         const editor = new EditorJS({
             holder: EDITOR_HOLDER_ID,
-            logLevel: "ERROR",
-            onReady: () => {
-               editorInstance.current = editor
+            onChange: async () => {
+                let content = await this.editorjs.saver.save();
+                setEditorData(content);
+                console.log("data is set")
             },
-            // onChange: async () => {
-            //     let content = await this.editorjs.saver.save();
-            //     setEditorData(content);
-            //     console.log("data is set")
-            // },
             autofocus: true,
             tools: {
                 header: Header,
@@ -55,16 +57,36 @@ const Editor = () => {
                 simpleImage: SimpleImage,
                 link: Link,
                 raw: Raw,
-                timeline: Timeline
+                timeline: Timeline,
+                carousel: Carousel,
             },
             data: editorData,
         });
-        
+
+    const saveData = async() => {
+        try{
+        await editor.isReady
+        .then(() => {
+            editor.save().then((outputData) => {
+                console.log('Article data: ', outputData)
+            })
+        })
+        }
+        catch(error){
+            console.log('Saving failed: ', error)
+        }
+    
+    }
+    const handleSaveBtnClick = () => {
+        setSavedData(saveData);
     }
 
     return(
-        <div id={EDITOR_HOLDER_ID}>
- 
+        <div className="container">
+            <div id = {EDITOR_HOLDER_ID}>
+
+            </div>
+            <Button variant='contained' className={classes.saveBtn} size="medium" onClick={handleSaveBtnClick}>Save</Button>
         </div>
     )
 }
