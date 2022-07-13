@@ -40,8 +40,9 @@ export default class Timeline {
       this.data = {
         ...newData
       };
+      console.log(this.data);
     }
-
+    console.log(this.data);
     ReactDOM.render(
       (
         <EventTimeline

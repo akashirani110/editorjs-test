@@ -38,14 +38,34 @@ const useStyles = makeStyles(theme => ({
 const EDITOR_HOLDER_ID = 'editorjs'
 
 const Editor = () => {
+    const editorInstance = useRef();
     const [editorData, setEditorData] = useState(DEFAULT_INITIAL_DATA);
     const [savedData, setSavedData] = useState({});
     const classes = useStyles();
 
+    useEffect(() => {
+        if(!editorInstance.current){
+            initEditor();
+        }
+        return () => {
+            editorInstance.current = null;
+        }
+    }, [])
+    const initEditor = () => {
         const editor = new EditorJS({
             holder: EDITOR_HOLDER_ID,
+            data: {...editorData},
+            onReady: () => {
+                editorInstance.current = editor;
+            },
             onChange: async () => {
-                let content = await this.editorjs.saver.save();
+                let content = await editor.isReady
+                .then(() => {
+                    editor.save().then((outputData) => {
+                        setEditorData(outputData);
+                        console.log('Article data: ', outputData)
+                    })
+                });
                 setEditorData(content);
                 console.log("data is set")
             },
@@ -60,7 +80,7 @@ const Editor = () => {
                 timeline: Timeline,
                 carousel: Carousel,
             },
-            data: editorData,
+            
         });
 
     const saveData = async() => {
@@ -68,17 +88,21 @@ const Editor = () => {
         await editor.isReady
         .then(() => {
             editor.save().then((outputData) => {
+                setEditorData(outputData);
                 console.log('Article data: ', outputData)
             })
         })
+        console.log(editorData)
         }
         catch(error){
             console.log('Saving failed: ', error)
         }
     
     }
+    }
+        
     const handleSaveBtnClick = () => {
-        setSavedData(saveData);
+       console.log(editorData);
     }
 
     return(

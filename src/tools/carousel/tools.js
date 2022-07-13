@@ -16,13 +16,13 @@ export default class Carousel{
         return true;
     }
 
-    constructor({ data, config, api, readOnly }) {
+    constructor({ data, config, api, readOnly, block }) {
         this.api = api;
         this.readOnly = readOnly;
         this.data = {
           urls: data.urls || [],
         };
-    
+        this.blockAPI = block
         this.CSS = {
           wrapper: 'image-carousel',
         };
@@ -41,6 +41,7 @@ export default class Carousel{
           this.data = {
             ...newData
           };
+          this.blockAPI.dispatchChange();
         }
     
         ReactDOM.render(
@@ -56,6 +57,7 @@ export default class Carousel{
     }
 
     save() {
-        return this.data;
+      console.log(this.data)
+        return this.data.urls;
     }
 }
