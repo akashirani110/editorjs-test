@@ -1,4 +1,4 @@
-import { Button, TextField, Input, Typography, FormControl } from '@material-ui/core'
+import { Button, TextField, Typography, FormControl } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles';
 import { Box } from '@material-ui/core';
 import {default as React, useState} from 'react'
@@ -85,7 +85,7 @@ const ImageCarousel = (props) => {
                     
                     <FormControl key={index}>
                         <Typography className={classes.label} color='textPrimary'>{index + 1}</Typography>
-                        <TextField variant='outlined' className={classes.urlInput} placeholder='Image URL' type="text" color="primary" onChange={onContentChange(index, 'value')} />
+                        <TextField variant='outlined' className={classes.urlInput} placeholder='Image URL' required type="text" color="primary" onChange={onContentChange(index, 'value')} />
                     </FormControl>
                 ))}
                 {
